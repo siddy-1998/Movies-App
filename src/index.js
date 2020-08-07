@@ -8,15 +8,24 @@ import rootReducer from './reducers';
 
 //function logger(obj,next,action)
 //redux will call it as logger(obj)(next)(action)
-const logger = function( {dispatch , getState}){
-    return function(next){
-        return function(action){
-            //middleware code
-            console.log('ACTION_TYPE =',action.type);
+// const logger = function( {dispatch , getState}){
+//     return function(next){
+//         return function(action){
+//             //middleware code
+//             console.log('ACTION_TYPE =',action.type);
 
-            next(action);
-        }
-    }
+//             next(action);
+//         }
+//     }
+// }
+
+//modified form of writing middleware
+const logger = ( {dispatch , getState}) => (next) => (action) =>{
+     //middleware code
+     //logger code
+     console.log('ACTION_TYPE =', action.type);
+     next(action);
+
 }
 
 const store = createStore(rootReducer,applyMiddleware(logger));
