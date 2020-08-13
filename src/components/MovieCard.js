@@ -1,5 +1,6 @@
 import React from 'react';
 import { addFavourite , removeFromFavourites} from '../actions';
+import { connect } from 'react-redux';
 
 class MovieCard extends React.Component {
 
@@ -38,4 +39,14 @@ class MovieCard extends React.Component {
   
 }
 
-export default MovieCard;
+function mapStateToProps(state){
+  return{
+   //as we just need dispatch property 
+   // therfore we return empty object as dispatch is given to us by default
+    
+  };
+}
+
+export default connect(mapStateToProps)(MovieCard);
+
+

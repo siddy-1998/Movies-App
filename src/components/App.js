@@ -3,7 +3,7 @@ import {data as moviesList} from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import { addMovies , setShowFavourites } from '../actions';
-import { connect } from '../index';
+import { connect } from 'react-redux';
 
 class App extends React.Component{
 
@@ -51,7 +51,7 @@ class App extends React.Component{
                 <MovieCard 
                   movie={movie} 
                   key={`movies-${index}`} 
-                  dispatch={this.props.dispatch} 
+                  // dispatch={this.props.dispatch} 
                   isFavourite={this.isMovieFavourite(movie)}
                 />
               ))}
