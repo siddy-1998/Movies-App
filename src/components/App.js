@@ -1,29 +1,21 @@
 import React from 'react';
-import {data} from '../data';
+import {data as moviesList} from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import { addMovies , setShowFavourites } from '../actions';
-import { StoreContext } from '../index';
+import { connect } from '../index';
 
 class App extends React.Component{
 
   componentDidMount(){
-    const { store } = this.props;
-
-    store.subscribe(() => {
-       console.log('UPDATED');
-       this.forceUpdate();
-    })
-    
     //make API calls
     //dispatch action to add movies to store
-    store.dispatch(addMovies(data));
+    this.props.dispatch(addMovies(moviesList));
 
-    console.log('STATE',store.getState());
   }
 
   isMovieFavourite = (movie) =>{
-    const { movies } = this.props.store.getState();
+    const { movies } = this.props;
    
    const index = movies.favourites.indexOf(movie);
 
@@ -37,14 +29,13 @@ class App extends React.Component{
   }
 
   onChangeTab = (val) => {
-    this.props.store.dispatch(setShowFavourites(val));
+    this.props.dispatch(setShowFavourites(val));
   }
   
   render(){  
-      const { movies , search } = this.props.store.getState(); // { movies:{}, search:{}}
-      const { list , favourites , showFavourites } = movies;
-      console.log('RENDER', this.props.store.getState());
-
+      const { movies , search } = this.props; // { movies:{}, search:{}}
+      const { list , favourites = [] , showFavourites = [] } = movies;
+      
       const displayMovies = showFavourites ? favourites : list ;
       return (
         
@@ -60,7 +51,7 @@ class App extends React.Component{
                 <MovieCard 
                   movie={movie} 
                   key={`movies-${index}`} 
-                  dispatch={this.props.store.dispatch} 
+                  dispatch={this.props.dispatch} 
                   isFavourite={this.isMovieFavourite(movie)}
                 />
               ))}
@@ -73,14 +64,24 @@ class App extends React.Component{
    }
 }
 
-class AppWrapper extends React.Component{
-  render(){
-    return(
-      <StoreContext.Consumer>
-        {(store)=><App store={store} />}
-      </StoreContext.Consumer>
-    );
-  }
-}
+//Wrapping App component so that store can be used in methods other than render()
+// class AppWrapper extends React.Component{
+//   render(){
+//     return(
+//       <StoreContext.Consumer>
+//         {(store)=><App store={store} />}
+//       </StoreContext.Consumer>
+//     );
+//   }
+// }
 
-export default AppWrapper;
+
+function mapStateToProps(state) {
+  return {
+    movies: state.movies,
+    search: state.movies,
+  };
+}
+const connectedComponent = connect(mapStateToProps)(App);
+
+export default connectedComponent;
